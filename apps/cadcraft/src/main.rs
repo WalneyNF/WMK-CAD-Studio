@@ -46,7 +46,7 @@ impl App {
         let result = if final_attempt { self.workspace.save_on_exit(&self.cad.ui) } else { self.workspace.save_if_changed(&self.cad.ui) };
         if let Err(error) = result {
             if self.workspace_error.as_ref() != Some(&error) {
-                eprintln!("CADCraft workspace: {error}");
+                eprintln!("WMK CAD Studio: {error}");
                 self.cad.set_status(format!("Workspace could not be saved: {error}"));
                 self.workspace_error = Some(error);
             }
@@ -173,27 +173,26 @@ fn config_dir_from(var: impl Fn(&str) -> Option<std::ffi::OsString>) -> Option<s
         return Some(dir);
     }
     if cfg!(target_os = "macos") {
-        set("HOME").map(|h| h.join("Library/Application Support/CADCraft"))
+        set("HOME").map(|h| h.join("Library/Application Support/WMK-CAD-Studio"))
     } else if cfg!(windows) {
-        set("APPDATA").map(|a| a.join("CADCraft"))
+        set("APPDATA").map(|a| a.join("WMK-CAD-Studio"))
     } else {
         // The XDG spec ignores a relative XDG_CONFIG_HOME.
-        set("XDG_CONFIG_HOME").filter(|p| p.is_absolute()).or_else(|| set("HOME").map(|h| h.join(".config"))).map(|c| c.join("cadcraft"))
+        set("XDG_CONFIG_HOME").filter(|p| p.is_absolute()).or_else(|| set("HOME").map(|h| h.join(".config"))).map(|c| c.join("wmk-cad-studio"))
     }
 }
 
-const APP_ID: &str = "ai.storyteller.cadcraft";
+const APP_ID: &str = "br.wmk.cadstudio";
 
 /// Stencil bits of the window's render pass (see `NativeOptions::stencil_buffer`).
 const STENCIL_BITS: u8 = 8;
 
-#[cfg(target_os = "macos")]
-const APP_ICON_PNG: &[u8] = include_bytes!("../../../assets/app-icon/cadcraft-macos-512.png");
-#[cfg(not(target_os = "macos"))]
-const APP_ICON_PNG: &[u8] = include_bytes!("../../../assets/app-icon/cadcraft-256.png");
+const WMK_LOGO: &[u8] = include_bytes!("../../../assets/wmk/logo-wmk-cad.jpg");
 
 fn app_icon() -> Option<egui::IconData> {
-    eframe::icon_data::from_png_bytes(APP_ICON_PNG).map_err(|e| log::warn!("app icon: {e}")).ok()
+    let img = image::load_from_memory(WMK_LOGO).map_err(|e| log::warn!("WMK logo: {e}")).ok()?.to_rgba8();
+    let (width, height) = img.dimensions();
+    Some(egui::IconData { rgba: img.into_raw(), width, height })
 }
 
 fn version_string() -> String {
@@ -314,7 +313,7 @@ fn main() -> eframe::Result {
                 app.ui = ui;
             }
             if let Some(error) = &workspace_error {
-                eprintln!("CADCraft workspace: {error}");
+                eprintln!("WMK CAD Studio: {error}");
                 app.set_status(error);
             }
             app.system_languages = std::env::var("CADCRAFT_LOCALE").map(|s| vec![s]).unwrap_or_else(|_| sys_locale::get_locales().collect());
@@ -435,8 +434,8 @@ mod tests {
     #[cfg(all(unix, not(target_os = "macos")))]
     #[test]
     fn linux_and_bsd_follow_xdg_config_home() {
-        assert_eq!(config_dir_from(env(&[("XDG_CONFIG_HOME", "/x"), ("HOME", "/home/u")])), Some(PathBuf::from("/x/cadcraft")));
-        assert_eq!(config_dir_from(env(&[("HOME", "/home/u")])), Some(PathBuf::from("/home/u/.config/cadcraft")));
+        assert_eq!(config_dir_from(env(&[("XDG_CONFIG_HOME", "/x"), ("HOME", "/home/u")])), Some(PathBuf::from("/x/wmk-cad-studio")));
+        assert_eq!(config_dir_from(env(&[("HOME", "/home/u")])), Some(PathBuf::from("/home/u/.config/wmk-cad-studio")));
         // The XDG spec says a relative XDG_CONFIG_HOME is ignored.
         assert_eq!(config_dir_from(env(&[("XDG_CONFIG_HOME", "rel"), ("HOME", "/home/u")])), Some(PathBuf::from("/home/u/.config/cadcraft")));
     }
@@ -444,7 +443,7 @@ mod tests {
     #[cfg(target_os = "macos")]
     #[test]
     fn macos_uses_application_support() {
-        assert_eq!(config_dir_from(env(&[("HOME", "/Users/u")])), Some(PathBuf::from("/Users/u/Library/Application Support/CADCraft")));
+        assert_eq!(config_dir_from(env(&[("HOME", "/Users/u")])), Some(PathBuf::from("/Users/u/Library/Application Support/WMK-CAD-Studio")));
     }
 
     #[cfg(windows)]
@@ -452,7 +451,7 @@ mod tests {
     fn windows_uses_appdata() {
         assert_eq!(
             config_dir_from(env(&[("APPDATA", "C:\\Users\\u\\AppData\\Roaming")])),
-            Some(PathBuf::from("C:\\Users\\u\\AppData\\Roaming").join("CADCraft"))
+            Some(PathBuf::from("C:\\Users\\u\\AppData\\Roaming").join("WMK-CAD-Studio"))
         );
     }
 
