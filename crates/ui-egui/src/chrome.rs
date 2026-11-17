@@ -523,15 +523,17 @@ pub fn start_page(app: &mut CadApp, ui: &mut egui::Ui) {
     let left = Rect::from_min_size(r.min, vec2(300.0, r.height()));
     p.rect_filled(left, 0.0, t.chrome_dark);
     p.rect_filled(Rect::from_min_max(pos2(left.right(), r.top()), r.max), 0.0, t.chrome);
-    p.text(pos2(left.left() + 34.0, left.top() + 70.0), egui::Align2::LEFT_CENTER, "WMK CAD Studio", egui::FontId::proportional(28.0), t.text);
+    // Logotipo oficial WMK em vez da marca do fork original.
+    crate::wmk_brand::paint(ui.ctx(), &p, Rect::from_min_size(pos2(left.left() + 88.0, left.top() + 8.0), vec2(124.0, 124.0)));
+    p.text(pos2(left.left() + 34.0, left.top() + 163.0), egui::Align2::LEFT_CENTER, "WMK CAD Studio", egui::FontId::proportional(26.0), t.text);
     p.text(
-        pos2(left.left() + 34.0, left.top() + 98.0),
+        pos2(left.left() + 34.0, left.top() + 189.0),
         egui::Align2::LEFT_CENTER,
         crate::tf!("Version {version}", version = env!("CARGO_PKG_VERSION")),
         crate::theme::small(),
         t.text_faint,
     );
-    let mut y = left.top() + 140.0;
+    let mut y = left.top() + 230.0;
     let mut action = None;
     for (label, cmd) in [("Open...", "open"), ("New", "new"), ("New (metric)", "new.metric"), ("Open sample drawing", "sample")] {
         let br = Rect::from_min_size(pos2(left.left() + 34.0, y), vec2(220.0, 34.0));
