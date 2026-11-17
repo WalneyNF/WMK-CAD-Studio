@@ -88,6 +88,8 @@ Veja [Actions](https://github.com/WalneyNF/WMK-CAD-Studio/actions) e [Releases p
 
 O workflow WMK compila e empacota **`WMK-CAD-Studio.exe`**, incluindo logo e metadados WMK. Quando o build e a publicação terminarem com sucesso, o ZIP ficará disponível na aba Releases, sem precisar entrar na área de Actions. A versão disponibilizada inicialmente é uma **prévia experimental**, não um produto profissional homologado.
 
+**Importador WMK auxiliar — [download público do Architecture Studio](https://github.com/WalneyNF/WMK-Architecture-Studio/releases)**: use o aplicativo para revisar e exportar o DXF e, depois, abra esse DXF no WMK CAD Studio. Ainda não é um único EXE integrado.
+
 ## Trabalhar com plantas JPG, PNG e PDF — importador WMK
 
 O WMK CAD Studio abre diretamente desenhos vetoriais **DXF/DWG**; o recurso de **anexar imagens JPG/PNG/PDF dentro da área do CAD** ainda não está concluído neste executável.
