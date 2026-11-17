@@ -51,6 +51,8 @@ jobs:
           Copy-Item target/x86_64-pc-windows-msvc/release/cadcraft.exe dist/WMK-CAD-Studio.exe
           Copy-Item LICENSE-MIT,LICENSE-APACHE,NOTICE,ATTRIBUTION.md,README.md dist/
           if (Test-Path manuais) { Copy-Item manuais/* dist/manuais/ -Recurse -Force }
+          New-Item -ItemType Directory -Force -Path dist/assets/wmk | Out-Null
+          Copy-Item assets/wmk/* dist/assets/wmk/ -Force
           if (Test-Path examples) { Copy-Item examples dist/exemplos -Recurse -Force }
           if (Test-Path tools/importador) { Copy-Item tools/importador dist/importador-experimental -Recurse -Force }
           @'
