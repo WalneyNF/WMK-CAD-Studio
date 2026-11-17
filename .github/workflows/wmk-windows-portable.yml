@@ -1,0 +1,49 @@
+name: WMK Windows Portable
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/**'
+      - 'crates/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - '.github/workflows/wmk-windows-portable.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-portable:
+    runs-on: windows-latest
+    timeout-minutes: 120
+    steps:
+      - name: Obter codigo
+        uses: actions/checkout@v4
+      - name: Instalar Rust (MSVC)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+      - name: Compilar CAD Studio (binario original cadcraft.exe)
+        shell: pwsh
+        run: |
+          cargo build --locked --release -p cadcraft --target x86_64-pc-windows-msvc
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if (-not (Test-Path "target/x86_64-pc-windows-msvc/release/cadcraft.exe")) {
+            throw "Executavel nao encontrado"
+          }
+      - name: Criar pacote portatil
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Copy-Item target/x86_64-pc-windows-msvc/release/cadcraft.exe dist/cadcraft.exe
+          Copy-Item LICENSE-MIT,LICENSE-APACHE,NOTICE,ATTRIBUTION.md,README.md dist/
+          Compress-Archive -Path dist/* -DestinationPath WMK-CAD-Studio-Windows-Portable.zip -Force
+      - name: Disponibilizar ZIP para download
+        uses: actions/upload-artifact@v4
+        with:
+          name: WMK-CAD-Studio-Windows-Portable
+          path: WMK-CAD-Studio-Windows-Portable.zip
+          retention-days: 14
