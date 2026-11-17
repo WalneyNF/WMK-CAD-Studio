@@ -88,6 +88,22 @@ Veja [Actions](https://github.com/WalneyNF/WMK-CAD-Studio/actions) e [Releases p
 
 O workflow WMK compila e empacota **`WMK-CAD-Studio.exe`**, incluindo logo e metadados WMK. Quando o build e a publicação terminarem com sucesso, o ZIP ficará disponível na aba Releases, sem precisar entrar na área de Actions. A versão disponibilizada inicialmente é uma **prévia experimental**, não um produto profissional homologado.
 
+## Trabalhar com plantas JPG, PNG e PDF — importador WMK
+
+O WMK CAD Studio abre diretamente desenhos vetoriais **DXF/DWG**; o recurso de **anexar imagens JPG/PNG/PDF dentro da área do CAD** ainda não está concluído neste executável.
+
+Para converter uma planta raster em linhas **CAD editáveis**, agora existe um aplicativo auxiliar dentro do projeto irmão **[WMK Architecture Studio / importador](https://github.com/WalneyNF/WMK-Architecture-Studio/tree/main/importador)**. É uma ferramenta experimental de reconhecimento em Python, com **logo WMK, revisão visual das sugestões, calibração de escala por dois pontos e exportação DXF**.
+
+**Exemplo prático:**
+
+1. Baixe o [importador WMK v0.2](https://github.com/WalneyNF/WMK-Architecture-Studio/tree/main/importador) e rode o `iniciar-windows.bat` com Python 3.11+ instalado; alternativamente verifique a [compilação Windows do importador](https://github.com/WalneyNF/WMK-Architecture-Studio/actions).
+2. Abra a imagem da planta, clique em **Reconhecer linhas** e examine as linhas verdes geradas sobre a imagem.
+3. Clique nos segmentos que são móveis/cotas para **excluí-los** (ficam vermelhos); adicione manualmente linhas não detectadas.
+4. Se souber a dimensão de uma parede, use **Calibrar escala** para definir milímetros por pixel com dois pontos.
+5. Clique em **Salvar DXF revisado**, depois abra o arquivo no **WMK CAD Studio** e continue a edição.
+
+**Atenção:** a conversão não cria automaticamente portas ou janelas BIM, e a qualidade depende da planta. O DXF não terá escala métrica real enquanto o usuário não calibrar. A imagem original ainda não é anexada ao arquivo DXF do editor.
+
 ## Relação com os outros projetos WMK
 
 | Projeto | Responsabilidade |
