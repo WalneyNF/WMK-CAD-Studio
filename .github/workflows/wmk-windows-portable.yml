@@ -1,17 +1,24 @@
 name: WMK Windows Portable
+
 on:
   push:
     branches: [main]
     paths:
       - 'apps/**'
       - 'crates/**'
+      - 'assets/wmk/**'
       - 'Cargo.toml'
       - 'Cargo.lock'
+      - 'tools/importador/**'
       - '.github/workflows/wmk-windows-portable.yml'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: wmk-windows-portable-main
+  cancel-in-progress: true
 
 jobs:
   windows-portable:
@@ -26,24 +33,52 @@ jobs:
           targets: x86_64-pc-windows-msvc
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
-      - name: Compilar CAD Studio (binario original cadcraft.exe)
+      - name: Compilar WMK CAD Studio
         shell: pwsh
         run: |
-          cargo build --locked --release -p cadcraft --target x86_64-pc-windows-msvc
+          # --locked fica desativado enquanto o Cargo.lock do fork inclui novas dependencias diretas.
+          # Nunca distribuir versoes que falhem no cargo build.
+          $env:CADCRAFT_REQUIRE_WINRES = "1"
+          cargo build --release -p cadcraft --target x86_64-pc-windows-msvc
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          if (-not (Test-Path "target/x86_64-pc-windows-msvc/release/cadcraft.exe")) {
+          if (-not (Test-Path 'target/x86_64-pc-windows-msvc/release/cadcraft.exe')) {
             throw "Executavel nao encontrado"
           }
-      - name: Criar pacote portatil
+      - name: Preparar pacote portatil WMK
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force -Path dist | Out-Null
-          Copy-Item target/x86_64-pc-windows-msvc/release/cadcraft.exe dist/cadcraft.exe
+          New-Item -ItemType Directory -Force -Path dist/manuais | Out-Null
+          Copy-Item target/x86_64-pc-windows-msvc/release/cadcraft.exe dist/WMK-CAD-Studio.exe
           Copy-Item LICENSE-MIT,LICENSE-APACHE,NOTICE,ATTRIBUTION.md,README.md dist/
+          if (Test-Path manuais) { Copy-Item manuais/* dist/manuais/ -Recurse -Force }
+          if (Test-Path examples) { Copy-Item examples dist/exemplos -Recurse -Force }
+          if (Test-Path tools/importador) { Copy-Item tools/importador dist/importador-experimental -Recurse -Force }
+          @'
+          WMK CAD Studio - versao experimental
+          Execute WMK-CAD-Studio.exe para abrir o editor CAD.
+          Abra manuais/index.html para um tutorial em portugues.
+          Exemplo: exemplos/apartment.dxf.
+          Integracao de JPG/PNG/PDF por OCR ainda experimental e separada do executavel.
+          Base CADCraft: ArtCraft Team e colaboradores. Consulte LICENSE e NOTICE.
+          '@ | Set-Content dist/LEIA-ME-PRIMEIRO.txt -Encoding UTF8
           Compress-Archive -Path dist/* -DestinationPath WMK-CAD-Studio-Windows-Portable.zip -Force
-      - name: Disponibilizar ZIP para download
+      - name: Publicar artefato do build
         uses: actions/upload-artifact@v4
         with:
           name: WMK-CAD-Studio-Windows-Portable
           path: WMK-CAD-Studio-Windows-Portable.zip
-          retention-days: 14
+          retention-days: 30
+      - name: Publicar release de testes para download publico
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: wmk-cad-teste-${{ github.run_number }}
+          name: WMK CAD Studio - Teste ${{ github.run_number }}
+          prerelease: true
+          generate_release_notes: false
+          body: |
+            Build automatico Windows 64 bits, experimental e sem assinatura digital.
+            Interface com identidade WMK. Contem manuais HTML e exemplos.
+            Ainda nao esta homologado para projetos profissionais.
+            Historico e autoria original do CADCraft preservados em LICENSE / NOTICE / ATTRIBUTION.
+          files: WMK-CAD-Studio-Windows-Portable.zip
