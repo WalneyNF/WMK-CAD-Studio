@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/wmk/logo-wmk-cad.jpg" alt="Logo WMK CAD Studio" width="180"></p>
+
 # WMK CAD Studio
 
 **Editor CAD 2D em Rust, com desenho técnico, medições, arquivos DWG/DXF e automação.**
@@ -55,13 +57,15 @@ cd WMK-CAD-Studio
 cargo run --release -p cadcraft -- --sample
 ```
 
-O pacote e o executável da base ainda usam o nome técnico **`cadcraft`**. A troca do nome interno, ícones e demais recursos de marca WMK precisa ser feita com cuidado, sem quebrar os builds.
+**Nome do pacote Rust:** `cadcraft` (preservado para compatibilidade). **Nome do aplicativo e do executável Portable:** WMK CAD Studio / `WMK-CAD-Studio.exe`. A janela, tela Sobre e o recurso de ícone utilizam a identidade WMK; os autores originais permanecem creditados. Algumas referências técnicas internas permanecem como `cadcraft` para permitir atualizações da base.
 
 ### Compilar pelo GitHub Actions
 
 O fork traz um workflow original de release em `.github/workflows/release.yml` que utiliza ações externas da equipe original e parâmetros de assinatura. Para um teste independente, este fork também oferece o workflow **WMK Windows Portable**, que tenta compilar um EXE sem instalador e publica o artefato do job se a compilação passar.
 
-Veja [Actions](https://github.com/WalneyNF/WMK-CAD-Studio/actions). **Não afirmar build concluído sem consultar a execução.**
+Veja [Actions](https://github.com/WalneyNF/WMK-CAD-Studio/actions) e [Releases públicas](https://github.com/WalneyNF/WMK-CAD-Studio/releases).
+
+O workflow WMK compila e empacota **`WMK-CAD-Studio.exe`**, incluindo logo e metadados WMK. Quando o build e a publicação terminarem com sucesso, o ZIP ficará disponível na aba Releases, sem precisar entrar na área de Actions. A versão disponibilizada inicialmente é uma **prévia experimental**, não um produto profissional homologado.
 
 ## Relação com os outros projetos WMK
 
@@ -75,7 +79,7 @@ Veja [Actions](https://github.com/WalneyNF/WMK-CAD-Studio/actions). **Não afirm
 
 ## Identidade visual
 
-Os logos WMK CAD Studio e WMK Architecture Studio foram aprovados. A aplicação das imagens binárias nos repositórios e a substituição completa dos ícones antigos são tarefas distintas da tradução deste README e devem ser verificadas no build. **Não distribuir os logos e nomes registrados da equipe ArtCraft como identidade do fork.**
+O logo aprovado WMK CAD Studio está em [`assets/wmk/logo-wmk-cad.jpg`](assets/wmk/logo-wmk-cad.jpg), em versão reduzida para a interface e documentação. A aplicação tenta incorporá-lo como ícone da janela e recurso Windows durante a compilação. Não distribuir marcas originais ArtCraft como identidade do fork; manter as atribuições originais e licenças.
 
 ## Documentação, autoria e licenças
 
