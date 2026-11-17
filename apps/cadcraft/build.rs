@@ -33,17 +33,17 @@ fn main() {
         return;
     }
     let mut res = winresource::WindowsResource::new();
+    // O pacote WMK nao pode ser publicado sem o icone da marca.
+    // Se a imagem aprovada estiver ausente ou invalida, interromper a compilacao.
     let icon_path = match build_icon() {
-        Ok(path) => Some(path),
+        Ok(path) => path,
         Err(err) => {
-            println!("cargo:warning=WMK: falha ao gerar icone: {err}");
-            None
+            eprintln!("ERRO WMK: nao foi possivel gerar o icone do executavel: {err}");
+            std::process::exit(1);
         }
     };
-    let icon_display = icon_path.as_ref().map(|p| p.to_string_lossy().into_owned());
-    if let Some(ref icon) = icon_display {
-        res.set_icon(icon);
-    }
+    let icon_display = icon_path.to_string_lossy().into_owned();
+    res.set_icon(&icon_display);
     res.set("ProductName", "WMK CAD Studio")
         .set("FileDescription", "WMK CAD Studio - Editor de desenhos tecnicos")
         .set("CompanyName", "Walney Moreira Klein - WMK")
