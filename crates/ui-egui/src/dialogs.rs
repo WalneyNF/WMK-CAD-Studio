@@ -320,9 +320,16 @@ fn about(ctx: &egui::Context, open: &mut bool) {
                 1 => crate::credits::contributors_ui(ui),
                 2 => crate::credits::models_ui(ui),
                 _ => {
-                    ui.heading("WMK CAD Studio");
+                    ui.horizontal(|ui| {
+                        crate::wmk_brand::show(ui, vec2(96.0, 96.0));
+                        ui.vertical(|ui| {
+                            ui.heading("WMK CAD Studio");
+                            ui.label("Edição WMK — desenho técnico em Rust");
+                            ui.label("Walney Moreira Klein — walneyk@hotmail.com");
+                        });
+                    });
                     ui.label(crate::tf!("Version {version}", version = env!("CARGO_PKG_VERSION")));
-                    ui.label(crate::tl!("Computer-aided design and drafting: an open-source, clean-room CAD application written in pure Rust."));
+                    ui.label("Editor CAD 2D: desenho técnico, cotas, camadas, blocos, DXF/DWG e automação.");
                     ui.add_space(6.0);
                     ui.label(RichText::new("Personalizacao WMK: Walney Moreira Klein — walneyk@hotmail.com").color(t.text_dim));
                     ui.label("Base original CADCraft, desenvolvida pela equipe ArtCraft e colaboradores.");
