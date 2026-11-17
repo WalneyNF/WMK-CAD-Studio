@@ -47,6 +47,27 @@ zoom e
 
 **Atenção:** as unidades do CAD dependem das configurações do desenho; não presuma metros ou milímetros sem conferir.
 
+## Manuais HTML em português (offline)
+
+O ZIP Portable do WMK inclui manuais HTML que abrem com duplo clique, sem precisar instalar nada:
+
+- [Biblioteca de manuais](manuais/index.html) — início, navegação e índice.
+- [Primeiro contato](manuais/primeiro-contato.html) — janela, abrir desenho, zoom, pan, seleção e salvamento.
+- [Ferramentas](manuais/ferramentas.html) — comandos LINE, PLINE, OFFSET, TRIM, MOVE, cotas, camadas, blocos.
+- [Criar uma planta baixa](manuais/planta-baixa.html) — tutorial passo a passo de um quarto 4 × 3 m.
+- [Formatos DXF/DWG/PDF/PNG](manuais/arquivos.html) — quais formatos são editáveis e quais são apenas imagens.
+- [Resolver problemas](manuais/solucao-problemas.html) — como identificar versão antiga, logs, unidades e build.
+
+### Exemplos práticos
+
+| Exemplo | Arquivo | O que você aprende |
+|---|---|---|
+| Apartamento | [`examples/apartment.dxf`](examples/apartment.dxf) | Paredes, cotas, texto, camadas, móveis, blocos e hachuras |
+| Peça mecânica | [`examples/bracket.dxf`](examples/bracket.dxf) | Furos, simetria, medidas, detalhes e desenho técnico (se disponível neste fork) |
+| Quarto WMK 4 × 3 m | [Manual de planta baixa](manuais/planta-baixa.html) | Criar o contorno com coordenadas e salvar DXF |
+
+**Atenção:** imagens JPG/PNG/PDF ainda não são importadas como fundos editáveis nesta compilação. O projeto já exporta PNG/PDF. Conversão de imagens em linhas e ligação automática com BIM ainda estão em desenvolvimento, separadamente das ferramentas CAD 2D existentes.
+
 ## Compilar no Windows
 
 Requer Rust recente, com toolchain MSVC e dependências de compilação compatíveis. O README original descreve Rust 1.95+ para desktop/web.
