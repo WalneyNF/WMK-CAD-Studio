@@ -63,7 +63,7 @@ O ZIP Portable do WMK inclui manuais HTML que abrem com duplo clique, sem precis
 | Exemplo | Arquivo | O que você aprende |
 |---|---|---|
 | Apartamento | [`examples/apartment.dxf`](examples/apartment.dxf) | Paredes, cotas, texto, camadas, móveis, blocos e hachuras |
-| Peça mecânica | [`examples/bracket.dxf`](examples/bracket.dxf) | Furos, simetria, medidas, detalhes e desenho técnico (se disponível neste fork) |
+| Desenho mecânico | [Manual de ferramentas](manuais/ferramentas.html) | Aprender círculos, furos, espelhamento e cotas — exercício a criar no programa |
 | Quarto WMK 4 × 3 m | [Manual de planta baixa](manuais/planta-baixa.html) | Criar o contorno com coordenadas e salvar DXF |
 
 **Atenção:** imagens JPG/PNG/PDF ainda não são importadas como fundos editáveis nesta compilação. O projeto já exporta PNG/PDF. Conversão de imagens em linhas e ligação automática com BIM ainda estão em desenvolvimento, separadamente das ferramentas CAD 2D existentes.
